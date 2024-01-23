@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Rest_API.Models;
 using System;
@@ -12,15 +13,21 @@ namespace Rest_API.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        
+        private readonly kreatxTestContext _dbContext;
 
-        [HttpGet]
-        public IEnumerable<User> Get()
+        public UserController(kreatxTestContext dbContext)
         {
-            using (var context = new kreatxTestContext())
-            {
-                return context.Users.ToList();
-            }
+            _dbContext = dbContext;
         }
+
+
+        [HttpGet("Public")]
+        public IActionResult Public()
+        {
+            return Ok("Hi, you're on public property");
+        }
+
+
+        
     }
 }

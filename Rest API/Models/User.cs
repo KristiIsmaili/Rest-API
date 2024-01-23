@@ -23,6 +23,7 @@ namespace Rest_API.Models
         public int? Age { get; set; }
         public string Password { get; set; }
         public byte[] ProfilePic { get; set; }
+        public string Role { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
