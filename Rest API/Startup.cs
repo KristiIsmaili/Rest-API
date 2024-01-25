@@ -32,6 +32,13 @@ namespace Rest_API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            
+            services.AddMvc();
+            services.AddDbContext<kreatxTestContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("kreatxTestContext")));
+
+
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -43,7 +50,7 @@ namespace Rest_API
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration 
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration
                         ["Jwt:Key"]))
 
                     };
@@ -52,10 +59,7 @@ namespace Rest_API
 
 
                 });
-            services.AddMvc();
-            services.AddDbContext<kreatxTestContext>(options =>
-            options.UseSqlServer
-            (Configuration.GetConnectionString("kreatxTestContext")));
+
 
             services.AddAuthorization(options =>
             {
@@ -66,11 +70,47 @@ namespace Rest_API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
+                
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rest_API", Version = "v1" });
+
+
+                // Define the security scheme (JWT bearer token)
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                };
+
+                // Add the security scheme to the Swagger document
+                c.AddSecurityDefinition("Bearer", securityScheme);
+
+                // Specify the security requirements
+                var securityRequirement = new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                };
+
+                // Add security requirements to operations
+                c.AddSecurityRequirement(securityRequirement);
+
+
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

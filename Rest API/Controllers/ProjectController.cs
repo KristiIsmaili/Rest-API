@@ -23,14 +23,12 @@ namespace Rest_API.Controllers
         [HttpGet]
         public IEnumerable<Project> Get()
         {
-            using (var context = new kreatxTestContext())
-            {
-               
-                var prj = context.Projects.Select(project =>new Project
+             
+                var prj = _dbContext.Projects.Select(project =>new Project
                 {ProjectName = project.ProjectName, ProjectDescription = project.ProjectDescription }).ToList();
 
-                return context.Projects.ToList();
-            }
+                return _dbContext.Projects.ToList();
+            
         }
 
         [HttpPost]

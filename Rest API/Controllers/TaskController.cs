@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Rest_API.Models;
 using System;
@@ -13,15 +14,20 @@ namespace Rest_API.Controllers
     [Route("[controller]")]
     public class TaskController : ControllerBase
     {
-        
+        private readonly kreatxTestContext _dbContext;
+
+        public TaskController(kreatxTestContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<Task> Get()
         {
-            using (var context = new kreatxTestContext())
-            {
-                return context.Tasks.ToList();
-            }
+            
+                return _dbContext.Tasks.ToList();
+            
         }
     }
 }
