@@ -22,8 +22,8 @@ namespace Rest_API.Models
         public string Gender { get; set; }
         public int? Age { get; set; }
         public string Password { get; set; }
-        public byte[] ProfilePic { get; set; }
         public string Role { get; set; }
+        public int? IsDeleted { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
