@@ -132,24 +132,33 @@ namespace Rest_API.Controllers
             {
 
 
-                //var identity = HttpContext.User.Identity as ClaimsIdentity;
-                //if (identity == null)
-                //{
-                //    return null;
-                //}
-                //var userClaims = identity.Claims;
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                if (identity == null)
+                {
+                    return null;
+                }
+                var userClaims = identity.Claims;
 
-                //var usrEmail = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value;
+                var usrEmail = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value;
 
-                //var usr = await _dbContext.Users.Where(user => user.IsDeleted == 0 && user.Email == usrEmail)
-                //                .FirstOrDefaultAsync();
+                var usr = await _dbContext.Users.Where(user => user.IsDeleted == 0 && user.Email == usrEmail)
+                                .FirstOrDefaultAsync();
 
-                //var userID = usr.UserId;
+                var userID = usr.UserId;
+
+
 
 
 
 
                 var task = await _dbContext.Tasks.FirstOrDefaultAsync(u => u.TaskName == taskNameI);
+
+                var taskUserID = task.AssignedUserId;
+
+                if (userID != taskUserID)
+                {
+                    return BadRequest($"You can not change this task");
+                }
 
 
                 if (task == null)
