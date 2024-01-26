@@ -40,7 +40,7 @@ namespace Rest_API.Controllers
 
 
         //[HttpGet("Users")]
-        //[Authorize(Roles = "User")]
+        //[Authorize(Roles = "Employee")]
         //public IActionResult userEndpoint()
         //{
         //    var currentuser = GetCurrentUser();
@@ -52,8 +52,8 @@ namespace Rest_API.Controllers
         //}
 
 
-        //[HttpGet("AdminsAndUsers")]
-        //[Authorize(Roles = "Admin, User")]
+        //[HttpGet("AdminAndEmployee")]
+        //[Authorize(Roles = "Admin, Employee")]
         //public IActionResult adminAndUserEndpoint()
         //{
         //    var currentuser = GetCurrentUser();
@@ -65,8 +65,10 @@ namespace Rest_API.Controllers
         //}
 
 
+
+        //Read
         [HttpGet]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin, Employee")]
         public IEnumerable<User> Get()
         {
 
@@ -79,13 +81,14 @@ namespace Rest_API.Controllers
         }
 
 
-        [HttpPost("Admin/add/users")]
+        //Create
+        [HttpPost("Admin/add/User")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> Post([FromBody] UserCreateDto newUser)
         {
             if (newUser == null)
             {
-                return BadRequest("Invalid project data");
+                return BadRequest("Invalid user data");
             }
 
             var userToAdd = new User
@@ -107,8 +110,9 @@ namespace Rest_API.Controllers
         }
 
 
+        //Update
         [HttpPut("update/user/profile")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> UpdateCurrentUser([FromBody] UserUpdateDto userUpdateDto)
         {
             try
@@ -138,7 +142,7 @@ namespace Rest_API.Controllers
                 _dbContext.Users.Update(user);
                 await _dbContext.SaveChangesAsync();
 
-                return Ok($"Udated Successfully"); 
+                return Ok($"Updated Successfully"); 
             }
             catch (Exception ex)
             {
@@ -148,6 +152,7 @@ namespace Rest_API.Controllers
 
 
 
+        //Delete
         [HttpDelete("Admin/delete/users/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)

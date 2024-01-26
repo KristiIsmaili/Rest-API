@@ -18,7 +18,6 @@ namespace Rest_API.Models
         }
 
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
@@ -40,28 +39,16 @@ namespace Rest_API.Models
 
                 entity.Property(e => e.CreationDate).HasColumnType("date");
 
+                entity.Property(e => e.ProjectIsDeleted).HasColumnName("projectIsDeleted");
+
                 entity.Property(e => e.ProjectName).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateDate).HasColumnType("date");
 
                 entity.HasOne(d => d.ProjectAdminNavigation)
                     .WithMany(p => p.Projects)
                     .HasForeignKey(d => d.ProjectAdmin)
                     .HasConstraintName("FK__Projects__Projec__3E52440B");
-            });
-
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.ToTable("Role");
-
-                entity.Property(e => e.RoleId).HasColumnName("RoleID");
-
-                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
-
-                entity.Property(e => e.EmployeeRole).HasMaxLength(50);
-
-                entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.Roles)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .HasConstraintName("FK__Role__EmployeeID__3F466844");
             });
 
             modelBuilder.Entity<Task>(entity =>
@@ -70,6 +57,8 @@ namespace Rest_API.Models
 
                 entity.Property(e => e.AssignedUserId).HasColumnName("AssignedUserID");
 
+                entity.Property(e => e.AssignetEmployee).HasMaxLength(50);
+
                 entity.Property(e => e.CreationDate).HasColumnType("date");
 
                 entity.Property(e => e.DueDate).HasColumnType("date");
@@ -77,6 +66,10 @@ namespace Rest_API.Models
                 entity.Property(e => e.IsCompleted).HasMaxLength(10);
 
                 entity.Property(e => e.ProjectId).HasColumnName("ProjectID");
+
+                entity.Property(e => e.ProjectName).HasMaxLength(255);
+
+                entity.Property(e => e.TaskIsDeleted).HasColumnName("taskIsDeleted");
 
                 entity.HasOne(d => d.AssignedUser)
                     .WithMany(p => p.Tasks)

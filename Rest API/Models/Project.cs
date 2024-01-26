@@ -17,6 +17,8 @@ namespace Rest_API.Models
         public string ProjectDescription { get; set; }
         public DateTime? CreationDate { get; set; }
         public int? ProjectAdmin { get; set; }
+        public int? ProjectIsDeleted { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         public virtual User ProjectAdminNavigation { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }

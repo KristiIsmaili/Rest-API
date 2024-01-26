@@ -15,6 +15,9 @@ namespace Rest_API.Models
         public string IsCompleted { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? DueDate { get; set; }
+        public int? TaskIsDeleted { get; set; }
+        public string ProjectName { get; set; }
+        public string AssignetEmployee { get; set; }
 
         public virtual User AssignedUser { get; set; }
         public virtual Project Project { get; set; }
