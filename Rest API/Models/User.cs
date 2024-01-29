@@ -9,6 +9,7 @@ namespace Rest_API.Models
     {
         public User()
         {
+            Images = new HashSet<Image>();
             Projects = new HashSet<Project>();
             Tasks = new HashSet<Task>();
         }
@@ -24,6 +25,7 @@ namespace Rest_API.Models
         public string Role { get; set; }
         public int? IsDeleted { get; set; }
 
+        public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
     }

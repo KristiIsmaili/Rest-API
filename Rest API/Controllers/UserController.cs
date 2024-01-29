@@ -7,6 +7,7 @@ using Rest_API.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -109,6 +110,116 @@ namespace Rest_API.Controllers
             return CreatedAtAction(nameof(Get), new { id = userToAdd.UserId}, userToAdd);
         }
 
+        //Add Pofile Picture
+        [HttpPost("upload/profilePicture")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UploadPicture(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            var user = GetCurrentUser();
+
+            var userInfo = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            var userID = userInfo.UserId;
+
+            int imageCount = await _dbContext.Images
+                                       .CountAsync(p => p.UserId == userID);
+
+            if (imageCount >= 1)
+            {
+                return BadRequest("You have a profile picture and can't add another but you can change it.");
+            }
+
+            byte[] fileBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+
+            // Save fileBytes to your database along with any additional metadata
+            var picture = new Image
+            {
+                ImageData = fileBytes,
+                FileName = file.FileName,
+                ContentType = file.ContentType,
+                UserId = userID
+            };
+
+            _dbContext.Images.Add(picture);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok("File uploaded successfully");
+        }
+
+
+        //Show profile picture
+        [HttpGet("View/ProfilePicture")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> GetImage()
+        {
+
+            var user = GetCurrentUser();
+
+            var userInfo = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            var userID = userInfo.UserId;
+
+
+            var picture = await _dbContext.Images.FirstOrDefaultAsync(i => i.UserId == userID);
+            if (picture == null)
+            {
+                return Ok($"You do not have a profile picture.");
+            }
+
+            return File(picture.ImageData, picture.ContentType);
+        }
+
+        //Update profile picture
+
+        [HttpPut("upload/change/ProfilePicture")]
+        [Authorize(Roles = "Admin, Employee")]
+        public async Task<IActionResult> UpdatePicture(IFormFile file)
+        {
+
+
+            var user = GetCurrentUser();
+
+            var userInfo = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            var userID = userInfo.UserId;
+
+            var picture = await _dbContext.Images.FirstOrDefaultAsync(i=> i.UserId == userID);
+            if (picture == null)
+            {
+                return NotFound();
+            }
+
+
+            byte[] fileBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                fileBytes = memoryStream.ToArray();
+            }
+
+            // Update the picture data
+            picture.ImageData = fileBytes;
+            picture.FileName = file.FileName;
+            picture.ContentType = file.ContentType;
+
+            // Update the database
+            _dbContext.Images.Update(picture);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok("Picture updated successfully");
+        }
+
+
 
         //Update
         [HttpPut("update/user/profile")]
@@ -173,7 +284,7 @@ namespace Rest_API.Controllers
                 _dbContext.Users.Update(user);
                 await _dbContext.SaveChangesAsync();
 
-                return NoContent(); // HTTP 204 No Content response
+                return Ok("User deleted successfuly"); 
             }
             catch (Exception ex)
             {

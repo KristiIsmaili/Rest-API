@@ -146,6 +146,16 @@ namespace Rest_API.Controllers
                     return NotFound($"Could not find project with the name: {prjName} ");
                 }
 
+                var prjID = prj.ProjectId;
+
+                var openTaskCount = await _dbContext.Tasks.CountAsync(u => u.ProjectId == prjID && u.IsCompleted == "No" && u.TaskIsDeleted == 0);
+
+
+                if (openTaskCount != 0)
+                {
+                    return BadRequest("This Project can not be deletet because there are open uncompleted tasks.");
+                }
+
                 // Soft delete the project by setting projectIsDeleted to true
                 prj.ProjectIsDeleted = 1;
 

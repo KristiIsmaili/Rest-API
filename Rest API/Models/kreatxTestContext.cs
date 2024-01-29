@@ -17,6 +17,7 @@ namespace Rest_API.Models
         {
         }
 
+        public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -32,6 +33,22 @@ namespace Rest_API.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.Property(e => e.ImageId).HasColumnName("ImageID");
+
+                entity.Property(e => e.ContentType).HasMaxLength(100);
+
+                entity.Property(e => e.FileName).HasMaxLength(255);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__Images__UserID__49C3F6B7");
+            });
 
             modelBuilder.Entity<Project>(entity =>
             {
