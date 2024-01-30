@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Rest_API.Interfaces;
 using Rest_API.Models;
+using Rest_API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +40,11 @@ namespace Rest_API
             services.AddDbContext<kreatxTestContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("kreatxTestContext")));
 
+
+            services.AddScoped<IUserService, UserServices>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ITasksServices, TasksServices>();
+            services.AddScoped<IProjectsServices, ProjectsServices>();
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Rest_API.Services
 {
-    public class IProjectsServices
+    public class LoginServices
     {
     }
 }
