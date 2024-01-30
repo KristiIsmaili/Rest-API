@@ -38,7 +38,7 @@ namespace Rest_API.Controllers
             if(user != null)
             {
                 var token = Generate(user);
-                //return Ok(user);
+                
                 return Ok(token);
             }
 

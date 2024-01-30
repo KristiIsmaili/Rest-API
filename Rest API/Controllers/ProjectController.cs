@@ -96,7 +96,7 @@ namespace Rest_API.Controllers
 
 
         [HttpPut("update/project/{projectNameInput}")]
-        [Authorize(Roles = "Admin, Employee")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProjects(string projectNameInput, [FromBody] ProjectsViewModel.ProjectUpdateDto projectUpdate)
         {
             if (projectUpdate == null)

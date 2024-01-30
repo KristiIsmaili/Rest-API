@@ -70,7 +70,7 @@ namespace Rest_API.Controllers
         //Create
 
 
-        [HttpPost("Admin/add/User")]
+        [HttpPost("Admin/Add/User")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> Post([FromBody] UserViewModel.UserCreateDto newUser)
         {
