@@ -1,3 +1,5 @@
+using Abp.Events.Bus;
+using Abp.Events.Bus.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Rest_API.EventHandler;
 using Rest_API.Interfaces;
 using Rest_API.Models;
 using Rest_API.Services;
@@ -19,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Rest_API.EventHandler.LoginHandler;
 
 namespace Rest_API
 {
@@ -45,6 +49,10 @@ namespace Rest_API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ITasksServices, TasksServices>();
             services.AddScoped<IProjectsServices, ProjectsServices>();
+            services.AddSingleton<IEventBus, EventBus>();
+
+            services.AddTransient<IEventHandler<UserLoggedInEvent>, UserLoggedInEventHandler>();
+            services.AddTransient<IEventHandler<UserLoginFailedEvent>, UserLoginFailedEventHandler>();
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -13,6 +13,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using static Rest_API.EventHandler.LoginHandler;
+using Abp.Events.Bus;
+using Rest_API.EventHandler;
 
 namespace Rest_API.Controllers
 {
@@ -22,11 +25,13 @@ namespace Rest_API.Controllers
     {
         private readonly kreatxTestContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly IEventBus _eventBus;
 
-        public LoginController(kreatxTestContext dbContext, IConfiguration configuration)
+        public LoginController(kreatxTestContext dbContext, IConfiguration configuration, IEventBus eventBus)
         {
             _dbContext = dbContext;
             _configuration = configuration;
+            _eventBus = eventBus;
         }
 
         [AllowAnonymous]
@@ -37,6 +42,18 @@ namespace Rest_API.Controllers
             
             if(user != null)
             {
+
+                        // Publish UserLoggedInEvent
+                var loggedInEvent = new UserLoggedInEvent
+                {
+                    Email = user.Email,
+                    LoginTime = DateTime.UtcNow
+                };
+
+               // _eventBus.TriggerAsync(new UserLoggedInEvent(loggedInEventData));
+                //_eventBus.Publish(loggedInEvent);
+
+
                 var token = Generate(user);
                 
                 return Ok(token);
