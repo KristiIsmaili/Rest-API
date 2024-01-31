@@ -17,6 +17,7 @@ namespace Rest_API.Interfaces
         Task<IActionResult> GetProfilePictureAsync();
         Task<IActionResult> UpdateProfilePictureAsync(IFormFile file);
         Task<IActionResult> UpdateUserProfileAsync(UserViewModel.UserUpdateDto userUpdateDto);
+        Task<IActionResult> AdminUpdateUserAsync(int userId, UserViewModel.UserCreateDto changeUser);
         Task<IActionResult> DeleteUserAsync(int userId);
     }
 }

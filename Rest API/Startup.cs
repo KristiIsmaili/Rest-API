@@ -22,7 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Rest_API.EventHandler.LoginHandler;
+//using static Rest_API.EventHandler.LoginHandler;
+
 
 namespace Rest_API
 {
@@ -49,10 +50,16 @@ namespace Rest_API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ITasksServices, TasksServices>();
             services.AddScoped<IProjectsServices, ProjectsServices>();
-            services.AddSingleton<IEventBus, EventBus>();
 
-            services.AddTransient<IEventHandler<UserLoggedInEvent>, UserLoggedInEventHandler>();
-            services.AddTransient<IEventHandler<UserLoginFailedEvent>, UserLoginFailedEventHandler>();
+            services.AddSingleton<IEventBus, EventBus>();
+            services.AddTransient<UserLoggedInEventHandler>();
+
+            //services.AddTransient<IEventHandler<UserLoggedInEvent>, UserLoggedInEventHandler>();
+
+
+            
+            //services.AddTransient<IEventHandler<UserLoggedInEvent>, UserLoggedInEventHandler>();
+            //services.AddTransient<IEventHandler<UserLoginFailedEvent>, UserLoginFailedEventHandler>();
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

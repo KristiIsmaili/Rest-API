@@ -338,6 +338,19 @@ namespace Rest_API.Controllers
         //}
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///
+
+
+        [HttpPut("Admin/update/user/data")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminUpdateUserAsync(int userId, UserViewModel.UserCreateDto changeUser)
+        {
+
+            var result = await _userService.AdminUpdateUserAsync(userId, changeUser);
+
+            return result;
+
+        }
 
 
 

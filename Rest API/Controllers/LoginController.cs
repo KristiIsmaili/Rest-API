@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using static Rest_API.EventHandler.LoginHandler;
+//using static Rest_API.EventHandler.LoginHandler;
 using Abp.Events.Bus;
 using Rest_API.EventHandler;
 
@@ -42,18 +42,7 @@ namespace Rest_API.Controllers
             
             if(user != null)
             {
-
-                        // Publish UserLoggedInEvent
-                var loggedInEvent = new UserLoggedInEvent
-                {
-                    Email = user.Email,
-                    LoginTime = DateTime.UtcNow
-                };
-
-               // _eventBus.TriggerAsync(new UserLoggedInEvent(loggedInEventData));
-                //_eventBus.Publish(loggedInEvent);
-
-
+               
                 var token = Generate(user);
                 
                 return Ok(token);

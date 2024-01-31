@@ -225,6 +225,47 @@ namespace Rest_API.Services
         }
 
 
+        public async Task<IActionResult> AdminUpdateUserAsync(int userId, UserViewModel.UserCreateDto changeUser)
+        {
+            try
+            {
+
+                var user = await _dbContext.Users.FindAsync(userId);
+
+                if (user == null)
+                {
+                    return new NotFoundObjectResult($"User with ID {userId} not found.");
+                }
+
+                user.FirstName = changeUser.FirstName ?? user.FirstName;
+                user.LastName = changeUser.LastName ?? user.LastName;
+                user.UserName = changeUser.UserName ?? user.UserName;
+                user.Email = changeUser.Email ?? user.Email;
+                user.Password = changeUser.Password ?? user.Password;
+                user.Gender = changeUser.Gender ?? user.Gender;
+                user.Age = changeUser.Age ?? user.Age;
+                user.Role = changeUser.Role ?? user.Role;
+
+                _dbContext.Users.Update(user);
+                await _dbContext.SaveChangesAsync();
+
+                return new OkObjectResult("Updated Successfully");
+
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult($"An error occurred while updating the user: {ex.Message}")
+                {
+                    StatusCode = 500
+                };
+            }
+
+
+
+        }
+
+
+
         public async Task<IActionResult> DeleteUserAsync(int userId)
         {
             try
